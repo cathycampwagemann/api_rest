@@ -64,3 +64,7 @@ def predict():
         result = "La imagen no muestra signos de neumonía."
 
     return jsonify({"respuesta": result})
+
+if __name__ == '__main__':
+    # Especifica la dirección IP y el puerto en el que la aplicación Flask escuchará las solicitudes
+    app.run(host='0.0.0.0', port=8000)
