@@ -21,6 +21,9 @@ modelo = CustomDenseNet(num_classes=2)
 modelo.load_state_dict(torch.load(output, map_location=device))
 modelo.to(device)
 
+def index():
+    return render_template('index.html')
+
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
@@ -62,5 +65,4 @@ def predict():
     return jsonify({"respuesta": result})
 
 if __name__ == '__main__':
-    # Especifica la dirección IP y el puerto en el que la aplicación Flask escuchará las solicitudes
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True)
