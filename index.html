@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector de Neumonía</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+        #form {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        #file-input {
+            display: none;
+        }
+        #custom-file-input {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #custom-file-input:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+        #result p {
+            margin: 0;
+            font-size: 18px;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detector de Neumonía</h1>
+    <form id="form" enctype="multipart/form-data">
+        <input type="file" id="file-input" name="file">
+        <label for="file-input" id="custom-file-input">Seleccionar imagen</label>
+        <br>
+        <label for="carpeta_principal_imagenes">Ruta de la carpeta principal de imágenes:</label>
+        <input type="text" id="carpeta_principal_imagenes" name="carpeta_principal_imagenes" style="margin-left: 10px;">
+        <br>
+        <input type="button" onclick="enviarFormulario()" value="Cargar imagen" style="margin-top: 10px;">
+    </form>
+    <div id="result">
+        <p id="respuesta">Resultado:</p>
+    </div>
+
+    <script>
+        function enviarFormulario() {
+            var form = document.getElementById('form');
+            var formData = new FormData(form);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var respuestaElemento = document.getElementById('respuesta');
+                respuestaElemento.innerHTML = 'Resultado: <pre>' + data.respuesta + '</pre>';
+            })
+            .catch(error => {
+                console.error('Error al procesar la solicitud:', error);
+            });
+        }
+    </script>
+</body>
+</html>
