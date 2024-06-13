@@ -1,26 +1,22 @@
 FROM python:3.11-slim
 
-# Establece el directorio de trabajo
+# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copia el script de configuración en el contenedor
-COPY install_dependencies.sh /app/install_dependencies.sh
+# Copiar los scripts de configuración y darles permisos de ejecución
+COPY setup.sh install_dependencies.sh /app/
+RUN chmod +x /app/setup.sh /app/install_dependencies.sh
 
-# Dale permisos de ejecución al script
-RUN chmod +x /app/install_dependencies.sh
+# Ejecutar el script de configuración para instalar las dependencias del sistema
+RUN /app/setup.sh && /app/install_dependencies.sh
 
-# Ejecuta el script de configuración para instalar las dependencias del sistema
-RUN /app/install_dependencies.sh
+# Copiar el archivo de requisitos y el código de la aplicación en el contenedor
+COPY requirements.txt /app/
+COPY . /app/
 
-# Copia el archivo de requisitos y el código de la aplicación en el contenedor
-COPY requirements.txt /app/requirements.txt
-COPY . /app
-
-# Instala las dependencias de Python
+# Instalar las dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
-
 RUN pip install gunicorn
-RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
 # Expone el puerto que usará la aplicación
 EXPOSE 8000
