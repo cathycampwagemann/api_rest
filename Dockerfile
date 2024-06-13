@@ -1,28 +1,34 @@
-FROM python:3.11-slim
-
-# Establece el directorio de trabajo
+# Etapa 1: Instalación de dependencias del sistema
+FROM python:3.11-slim AS base
 WORKDIR /app
 
-# Crea el directorio necesario para apt, instala libgl1-mesa-glx y elimina archivos temporales
+# Crea el directorio necesario para apt
 RUN mkdir -p /var/lib/apt/lists/partial && \
     chmod 755 /var/lib/apt/lists/partial && \
     apt-get update && \
     apt-get install -y libgl1-mesa-glx && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    chmod 700 /var/lib/apt/lists/partial
 
-# Copia el archivo de requisitos y el código de la aplicación en el contenedor
+# Etapa 2: Instalación de dependencias de la aplicación
+FROM base AS dependencies
 COPY requirements.txt /app/requirements.txt
-COPY . /app
-
-# Crea y activa el entorno virtual, e instala los paquetes Python
 RUN python3 -m venv myenv && \
     . myenv/bin/activate && \
-    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Etapa 3: Copia del código de la aplicación
+FROM dependencies AS build
+COPY . /app
+
+# Etapa 4: Configuración final
+FROM build AS final
+# Instala gunicorn
+RUN . myenv/bin/activate && \
     pip install gunicorn
 
 # Expone el puerto que usará la aplicación
 EXPOSE 8000
 
 # Define el comando por defecto para ejecutar la aplicación
-CMD ["bash"]
+CMD ["gunicorn", "--worker-tmp-dir", "/dev/shm", "--config", "gunicorn_config.py", "api:app"]
+
