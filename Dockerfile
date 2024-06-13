@@ -20,7 +20,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN pip install gunicorn
-
+RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
 # Expone el puerto que usará la aplicación
 EXPOSE 8000
