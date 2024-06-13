@@ -3,21 +3,14 @@ FROM python:3.11-slim
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia el script de configuración en el contenedor
-COPY setup.sh /app/setup.sh
-
-# Dale permisos de ejecución al script
-RUN chmod +x /app/setup.sh
-
-# Ejecuta el script de configuración para instalar las dependencias del sistema
-RUN /app/setup.sh
-
 # Copia el archivo de requisitos y el código de la aplicación en el contenedor
 COPY requirements.txt /app/requirements.txt
 COPY . /app
 
 # Instala las dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Instala gunicorn
 RUN pip install gunicorn
 
 # Expone el puerto que usará la aplicación
