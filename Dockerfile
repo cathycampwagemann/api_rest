@@ -3,11 +3,6 @@ FROM python:3.11-slim
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Actualiza la lista de paquetes e instala las dependencias del sistema necesarias
-RUN mkdir -p /var/lib/apt/lists/partial && chmod 755 /var/lib/apt/lists/partial && \
-    apt-get update && apt-get install -y libgl1-mesa-glx && \
-    chmod 700 /var/lib/apt/lists/partial
-
 # Copia el archivo de requisitos y el código de la aplicación en el contenedor
 COPY requirements.txt /app/requirements.txt
 COPY . /app
