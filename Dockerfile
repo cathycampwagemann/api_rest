@@ -19,7 +19,6 @@ COPY api.py .
 COPY modelo.py .
 COPY gunicorn_config.py .
 COPY requirements.txt .
-COPY templates ./templates
 COPY index.html ./templates
 
 # Descarga el modelo desde Google Drive
