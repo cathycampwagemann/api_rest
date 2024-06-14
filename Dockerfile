@@ -13,17 +13,24 @@ RUN apt-get update && apt-get install -y \
 # Copia el archivo requirements.txt en el contenedor
 COPY requirements.txt .
 
-# Instala las dependencias de Python
+# Instala las dependencias necesarias para crear un entorno virtual
+RUN apt-get update && apt-get install -y python3-venv
+
+# Crea y activa el entorno virtual
+RUN python3 -m venv venv
+RUN /bin/bash -c "source venv/bin/activate"
+
+# Instala las dependencias en el entorno virtual
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Instala gdown para descargar archivos de Google Drive
 RUN pip install gdown
 
 # Copia el resto de los archivos de la aplicación en el contenedor
-COPY api.py /app/
-COPY modelo.py /app/
-COPY gunicorn_config.py /app/
-COPY templates/index.html /app/templates/
+COPY api.py .
+COPY modelo.py .
+COPY gunicorn_config.py .
+COPY templates index.html .
 
 # Descarga el modelo desde Google Drive
 RUN gdown https://drive.google.com/uc?id=1Ed9g2Rj_k7CPF8ClBalaYfDhfbNlsuTC -O mejor_modelo.pth
