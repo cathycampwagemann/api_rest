@@ -21,6 +21,7 @@ modelo = CustomDenseNet(num_classes=2)
 modelo.load_state_dict(torch.load(output, map_location=device))
 modelo.to(device)
 
+@app.route('/')
 def index():
     return render_template('index.html')
 
