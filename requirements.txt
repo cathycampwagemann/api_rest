@@ -7,3 +7,6 @@ torchvision==0.18.1
 tensorflow==2.16.1
 gdown==5.2.0
 requests==2.32.3
+redis
+werkzeug
+flask-caching
