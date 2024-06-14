@@ -20,10 +20,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gdown
 
 # Copia el resto de los archivos de la aplicación en el contenedor
-COPY api.py .
-COPY modelo.py .
-COPY gunicorn_config.py .
-COPY -r templates templates
+COPY api.py /app/
+COPY modelo.py /app/
+COPY gunicorn_config.py /app/
+COPY templates/index.html /app/templates/
 
 # Descarga el modelo desde Google Drive
 RUN gdown https://drive.google.com/uc?id=1Ed9g2Rj_k7CPF8ClBalaYfDhfbNlsuTC -O mejor_modelo.pth
